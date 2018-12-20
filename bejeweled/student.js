@@ -41,15 +41,25 @@ function horizontalChainAt(grid, position){
 }
 
 function verticalChainAt(grid, position){
-    let a = grid[position.y][position.x];
-    var count = 0;
-    for (var i = 0; i < grid.length; i++){
-        if (grid[i][position.x] === a){
-            count++;
-        }
-        else return count;
+
+    var color = grid[position.y][position.x];
+    var chain = 0;
+    var longestChain = 0;
+
+    for (i = 0; i < grid.length; i++) {
+        if (grid[i][position.x] === color) {
+            chain++;
+            if (i === grid.length - 1) {
+                longestChain = chain;
+            }
+        } else {if (longestChain < chain) {longestChain = chain}; chain = 0;}
     }
-    return count;
+
+    /*if (longestChain >= 3) {
+        return longestChain
+    } else {return 0;}*/
+
+    return longestChain;
 }
 
 function removeChains(grid){
