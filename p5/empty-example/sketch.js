@@ -101,7 +101,11 @@ var s = function( p ) {
     if (count ===2){
       counted[0].clicked = false;
       counted[1].clicked = false;
-      p.swap(counted[0], counted[1]);
+      if (counted[0].position.x  === counted[1].position.x + 1 ||counted[0].position.x  === counted[1].position.x - 1 || counted[0].position.y  === counted[1].position.y +1 || counted[0].position.y  === counted[1].position.y - 1 ){
+        p.swap(counted[0], counted[1]);
+      }
+      else return;
+      
     }
   }
   p.swap = function(p1, p2){
