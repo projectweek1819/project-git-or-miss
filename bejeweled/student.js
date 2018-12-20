@@ -5,9 +5,9 @@ function height(matrix){
     return matrix.length;
 }
 function isInside(grid, position){
-    if (position.x < 0 || position.x > width(grid)) return false;
-    if (position.y < 0 || position.y > height(grid)) return false;
-    return true;
+    if(position.x < grid[0].length && position.y < grid.length && position.x > -1 && position.y > -1) {
+        return true;
+    } else {return false;};
 }
 function swap(grid, p, q){
     let a = [];
