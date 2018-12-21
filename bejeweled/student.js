@@ -62,28 +62,47 @@ function verticalChainAt(grid, position){
     return longestChain;
 }
 
-function removeChains(grid){
-    var removed = {};
-    for (var i = 0; i < grid.length; i++){   
-        for (var j = 0; j < grid[0].length; j++){
-            var temp = horizontalChainAt(grid, {x: j, y:i})
-            if (temp >= 3){
-                var color = grid[i][j];
-                if (!removed.hasOwnProperty(color)) removed[color] = temp;
-                else removed[color] += temp;
-                
+function removeChains(grid) {
+    const positions = [];
+    const result = {};
+    const w = width(grid);
+    const h = height(grid);
 
+    for (let y = 0; y !== h; ++y) {
+        let x = 0;
+        while (x < w) {
+            const horLength = horizontalChainAt(grid, { x, y });
+            if (horLength > 2) {
+                for (let i = 0; i !== horLength; ++i) {
+                    positions.push({ x: x + i, y });
+                }
             }
-
-            var temp = verticalChainAt(grid,{x: j, y:i});
-            if (temp >= 3){
-                var color = grid[i][j];
-                if (!removed.hasOwnProperty(color)) removed[color] = temp;
-                else removed[color] += temp;
-                
-            }
-     
+            x += horLength;
         }
     }
-    return removed;
+
+    for (let x = 0; x !== w; ++x) {
+        let y = 0;
+        while (y < h) {
+            const verLength = verticalChainAt(grid, { x, y });
+            if (verLength > 2) {
+                for (let i = 0; i !== verLength; ++i) {
+                    positions.push({ x, y: y + i });
+                }
+            }
+            y += verLength;
+        }
+    }
+
+    for (const position of positions) {
+        const { x, y } = position;
+        const color = grid[y][x];
+        result[color] = (result[color] || 0) + 1;
+    }
+
+    for (const { x, y } of positions) {
+        grid[y][x] = '';
+    }
+
+    return result;
 }
