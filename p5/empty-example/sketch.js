@@ -51,7 +51,7 @@ var s = function( p ) {
     return {x: gridX, y: gridY}    
   }
   p.draw = function() {
-    p.background(0);
+    p.background(1000000);
     for (var y = 0; y < p.grid.length; y++) {
       for (var x = 0; x < p.grid[0].length; x++) {
         p.fill(p.grid[y][x].color);
@@ -74,15 +74,20 @@ var s = function( p ) {
   }
 
   p.validateGame = function(){
-    for (i = 0; i < p.grid.length; i++) {
-      for (j = 0; i < p.grid[0].length; j++) {
-        vert = p.verticalChain({x: j , y:i});
+    for (var i = 0; i < p.grid.length; i++) {
+      for (var j = 0; j < p.grid[0].length; j++) {
+        let position = {x: j, y:i};
+        console.log(position);
+        
+        vert = p.verticalChain(position);
         if (vert >=3){
-          p.removeChains({x: j , y:i}, "ver", vert)
+          p.removeChains(position, "ver", vert)
         } 
-        hori = p.horizontalChain({x: j , y:i});
+        
+        hori = p.horizontalChain(position);
+        
         if (hori>=3){
-          p.removeChains({x: j , y:i}, "hor", hori)
+          p.removeChains(position, "hor", hori)
         } 
       }
     }
@@ -90,22 +95,32 @@ var s = function( p ) {
 
   p.removeChains = function(position, direction, length){
     if (direction === "hor"){
-      console.log(position, direction, length)
+      for ( var i = 0; i< p.grid[0].length-1; i++){
+        
+        if (p.grid[position.y][position.x+1].color ===p.grid[position.y][position.x].color){
+          
+          length--;
+          if (length === 0){
+            p.grid[position.y][position.x+1].color = "#ffffff"
+          } break;
+        }
+      }
     }
     else if (direction === "ver"){
+      console.log(position, direction, length)
 
     }
 
   }
 
   p.verticalChain = function(position){
-    console.log(p.grid)
-    console.log(p.grid[position.y])
+    
+    
     var color = p.grid[position.y][position.x].color;
     var chain = 0;
     var longestChain = 0;
 
-    for (i = 0; i < p.grid.length; i++) {
+    for (var i = 0; i < p.grid.length; i++) {
         if (p.grid[i][position.x].color === color) {
             chain++;
             if (i === p.grid.length - 1) {
@@ -124,7 +139,7 @@ var s = function( p ) {
     var chain = 0;
     var longestChain = 0;
 
-    for (i = 0; i < p.grid[0].length; i++) {
+    for (var i = 0; i < p.grid[0].length; i++) {
         if (p.grid[position.y][i].color === color) {
             chain++;
             if (i === p.grid[0].length - 1) {
