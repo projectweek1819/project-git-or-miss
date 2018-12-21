@@ -18,9 +18,7 @@ var s = function( p ) {
     return rand;
   };
   
-  p.sleep = function(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+ 
   
   p.gridPosition = function(valueX, valueY){
     console.log(valueX, valueY)
@@ -58,7 +56,7 @@ var s = function( p ) {
       for (var x = 0; x < p.grid[0].length; x++) {
         p.fill(p.grid[y][x].color);
         p.ellipse(x*100+60, y*100+60, 60,60);
-        p.sleep(2000);
+        
       }
     }
   };
@@ -72,7 +70,72 @@ var s = function( p ) {
       p.grid[mousePos.y][mousePos.x].clicked = true;
     }
     p.checkSwap();
+    p.validateGame();
   }
+
+  p.validateGame = function(){
+    for (i = 0; i < p.grid.length; i++) {
+      for (j = 0; i < p.grid[0].length; j++) {
+        vert = p.verticalChain({x: j , y:i});
+        if (vert >=3){
+          p.removeChains({x: j , y:i}, "ver", vert)
+        } 
+        hori = p.horizontalChain({x: j , y:i});
+        if (hori>=3){
+          p.removeChains({x: j , y:i}, "hor", hori)
+        } 
+      }
+    }
+  }
+
+  p.removeChains = function(position, direction, length){
+    if (direction === "hor"){
+      console.log(position, direction, length)
+    }
+    else if (direction === "ver"){
+
+    }
+
+  }
+
+  p.verticalChain = function(position){
+    console.log(p.grid)
+    console.log(p.grid[position.y])
+    var color = p.grid[position.y][position.x].color;
+    var chain = 0;
+    var longestChain = 0;
+
+    for (i = 0; i < p.grid.length; i++) {
+        if (p.grid[i][position.x].color === color) {
+            chain++;
+            if (i === p.grid.length - 1) {
+                longestChain = chain;
+            }
+        } else {if (longestChain < chain) {longestChain = chain}; chain = 0;}
+  
+      }    
+      return longestChain;
+  }
+
+  p.horizontalChain = function(position){
+    console.log(p.grid)
+    console.log(p.grid[position.y])
+    var color = p.grid[position.y][position.x].color;
+    var chain = 0;
+    var longestChain = 0;
+
+    for (i = 0; i < p.grid[0].length; i++) {
+        if (p.grid[position.y][i].color === color) {
+            chain++;
+            if (i === p.grid[0].length - 1) {
+                longestChain = chain;
+            }
+        } else {if (longestChain < chain) {longestChain = chain}; chain = 0;}
+  
+      }    
+      return longestChain;
+    }
+
   p.createGrid = function(){
     let a = [];    
     for (var y = 0; y < 5; y++) {
